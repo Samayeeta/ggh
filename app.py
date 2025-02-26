@@ -5,12 +5,11 @@ from PIL import Image
 import tensorflow as tf
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph, SimpleDocTemplate
 import io
 import cv2
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score
 
 # Load the CNN model
 model = tf.keras.models.load_model("models/cic_cnn.h5")
@@ -42,23 +41,32 @@ def analyze_patient_data(patient_data):
     else:
         return "Low Risk"
 
-def generate_report(image_analysis, patient_risk, patient_data, lvef, heart_size):
+def generate_styled_report(image_analysis, patient_risk, patient_data, lvef, heart_size):
     buffer = io.BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    c.drawString(100, 750, "CardioLens Report")
-    c.drawString(100, 700, f"Image Analysis: {image_analysis:.2f} (Probability of CIC)")
-    c.drawString(100, 680, f"Patient Risk: {patient_risk}")
-    c.drawString(100, 660, f"Age: {patient_data['Age']}")
-    c.drawString(100, 640, f"Chemo Drug: {patient_data['Chemo Drug']}")
-    c.drawString(100, 620, f"Total Dose: {patient_data['Total Dose']}")
-    c.drawString(100, 600, f"Hypertension: {patient_data['Hypertension']}")
-    c.drawString(100, 580, f"Diabetes: {patient_data['Diabetes']}")
-    c.drawString(100, 560, f"Symptoms: {patient_data['Symptoms']}")
-    c.drawString(100, 540, f"Cancer Stage: {patient_data['Cancer Stage']}")
-    c.drawString(100, 520, f"Cancer Free: {patient_data['Cancer Free']}")
-    c.drawString(100, 500, f"Left Ventricular Ejection Fraction (Simulated): {lvef}%")
-    c.drawString(100, 480, f"Heart Size (Simulated): {heart_size} mm")
-    c.save()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    heading_style = styles['Heading2']
+    text_style = styles['Normal']
+
+    elements = []
+    elements.append(Paragraph("CardioGuardAI Report", title_style))
+    elements.append(Paragraph(f"Image Analysis: {image_analysis:.2f} (Probability of CIC)", text_style))
+    elements.append(Paragraph(f"Patient Risk: {patient_risk}", text_style))
+    elements.append(Paragraph("Patient Details", heading_style))
+    elements.append(Paragraph(f"Age: {patient_data['Age']}", text_style))
+    elements.append(Paragraph(f"Chemo Drug: {patient_data['Chemo Drug']}", text_style))
+    elements.append(Paragraph(f"Total Dose: {patient_data['Total Dose']}", text_style))
+    elements.append(Paragraph(f"Hypertension: {patient_data['Hypertension']}", text_style))
+    elements.append(Paragraph(f"Diabetes: {patient_data['Diabetes']}", text_style))
+    elements.append(Paragraph(f"Symptoms: {patient_data['Symptoms']}", text_style))
+    elements.append(Paragraph(f"Cancer Stage: {patient_data['Cancer Stage']}", text_style))
+    elements.append(Paragraph(f"Cancer Free: {patient_data['Cancer Free']}", text_style))
+    elements.append(Paragraph("Echocardiogram Analysis", heading_style))
+    elements.append(Paragraph(f"Left Ventricular Ejection Fraction (Simulated): {lvef}%", text_style))
+    elements.append(Paragraph(f"Heart Size (Simulated): {heart_size} mm", text_style))
+
+    doc.build(elements)
     buffer.seek(0)
     return buffer
 
@@ -71,28 +79,11 @@ def analyze_cic_image(image):
 
     return simulated_lvef, simulated_size
 
-def train_and_evaluate_model(image_paths, labels):
-    images = []
-    for img_path in image_paths:
-        img = cv2.imread(img_path)
-        img = cv2.resize(img, (128, 128))
-        img = img / 255.0
-        images.append(img)
-    images = np.array(images)
-    labels = np.array(labels)
-
-    X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.2, random_state=42)
-
-    model.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test))
-
-    y_pred = model.predict(X_test)
-    y_pred_binary = (y_pred > 0.5).astype(int)
-
-    accuracy = accuracy_score(y_test, y_pred_binary)
-    return accuracy
-
 def main():
-    st.title("CardioLens: CIC Diagnostic Assistant")
+    st.set_page_config(page_title="CardioGuardAI", page_icon="❤️")
+    st.title("CardioGuardAI: CIC Diagnostic Assistant")
+    st.write("CardioGuardAI is a diagnostic tool designed to assist cardio-oncologists in the assessment of Chemotherapy-Induced Cardiomyopathy (CIC). By analyzing echocardiogram images and patient data, it provides risk assessments and generates detailed reports.")
+
 
     uploaded_image = st.file_uploader("Upload Echocardiogram Image", type=["jpg", "png", "jpeg"])
 
@@ -129,21 +120,15 @@ def main():
             st.write(f"Left Ventricular Ejection Fraction (Simulated): {lvef}%")
             st.write(f"Heart Size (Simulated): {heart_size} mm")
 
-            report_buffer = generate_report(image_analysis, patient_risk, patient_data, lvef, heart_size)
+            report_buffer = generate_styled_report(image_analysis, patient_risk, patient_data, lvef, heart_size)
             st.download_button(
                 label="Download Report",
                 data=report_buffer,
-                file_name="cardiolens_report.pdf",
+                file_name="cardioguardai_report.pdf",
                 mime="application/pdf",
             )
         else:
             st.warning("Please upload an image.")
-
-    if st.button("Train Model"):
-        image_paths = ["data/img1.jpg", "data/img2.jpg"]  # Replace with your actual paths
-        labels = [0, 1]  # Replace with your actual labels (0: no CIC, 1: CIC)
-        accuracy = train_and_evaluate_model(image_paths, labels)
-        st.write(f"Model Accuracy: {accuracy:.2f}")
 
 if __name__ == "__main__":
     main()
