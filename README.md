@@ -72,7 +72,7 @@ Cardio-oncologists specialize in managing the cardiac complications of cancer th
 1.  **Clone the repository:**
 
     ```bash
-    git clone [your-repository-url]
+    git clone https://github.com/Samayeeta/ggh 
     cd CardioGuardAI
     ```
 
