@@ -1,10 +1,8 @@
 # CardioGuardAI: Empowering Cardio-Oncology with AI-Driven Diagnostics
 
-![CardioGuardAI Logo] 
-
 ## The Urgent Need for Advanced Cardio-Oncology Diagnostics
 
-Noncommunicable diseases (NCDs), encompassing cardiovascular diseases (CVDs), cancers, chronic respiratory illnesses, and diabetes, account for approximately 60% of global deaths, according to the National Library of Medicine. CVDs, specifically ischaemic heart disease and stroke, are the leading cause, contributing to 17.7 million deaths annually. In India, the situation is particularly critical; the World Health Organization reports that India accounts for one-fifth of global CVD deaths, disproportionately affecting younger individuals. The Global Burden of Disease study reveals an age-standardized CVD death rate of 272 per 100,000 in India, significantly exceeding the global average of 235 per 100,000.
+Noncommunicable diseases (NCDs), encompassing cardiovascular diseases (CVDs), cancers, and more, account for approximately 60% of global deaths, according to the National Library of Medicine. CVDs, specifically ischaemic heart disease, are the leading cause, contributing to 17.7 million deaths annually. In India, the situation is particularly critical; the World Health Organization reports that India accounts for one-fifth of global CVD deaths, disproportionately affecting younger individuals. The Global Burden of Disease study reveals an age-standardized CVD death rate of 272 per 100,000 in India, significantly exceeding the global average of 235 per 100,000.
 
 CardioGuardAI directly addresses this urgent need by providing an AI-powered diagnostic assistant designed to aid cardio-oncologists in the early detection and management of Chemotherapy-Induced Cardiomyopathy (CIC). This is especially vital in high-volume settings, such as Indian government hospitals, where rapid and accurate diagnostics are crucial for patient care.
 
