@@ -1,0 +1,3 @@
+PatientID,Age,ChemoDrug,TotalDose,Hypertension,Diabetes,Symptoms
+1,65,Doxorubicin,300,Yes,No,"Shortness of breath, fatigue"
+2,72,Trastuzumab,500,No,Yes,"Swelling in legs"

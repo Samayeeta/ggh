@@ -1,0 +1,5 @@
+Age,Chemo Drug,Total Dose,Hypertension,Diabetes,Symptoms,Cancer Stage,Cancer Free
+65,Doxorubicin,300,Yes,No,Shortness of breath,Stage III,No
+72,Trastuzumab,500,No,Yes,Swelling in legs,Stage II,Yes
+55,Other,250,No,No,None,Cancer Free,Yes
+60,Doxorubicin,400,Yes,Yes,Other,Stage IV,No
